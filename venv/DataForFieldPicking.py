@@ -48,9 +48,8 @@ def convertChessBoard(board, boardMatrix):
                 boardMatrix[y, x, getIndex(piece)[0]] = getIndex(piece)[1]
 
 
-def CreateData(size):
-    pgn = open("C:/Users/User/Downloads/KingBase2019-pgn/KingBase2019-A00-A39.pgn")
-
+def createData(size, file="C:/Users/User/Downloads/KingBase2019-pgn/KingBase2019-A00-A39.pgn"):
+    pgn = open(file)
     games = []
     labels = []
     for _ in range(size):

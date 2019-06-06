@@ -3,7 +3,6 @@ import numpy as np
 import tensorflow as tf
 
 
-
 def getIndex(char):
     char = str(char)
     index = 0
@@ -40,15 +39,13 @@ def getIndex(char):
         value = -1
     return index, value
 
+
 def convertChessBoard(board, boardMatrix):
     for y in range(8):
         for x in range(8):
             piece = board.piece_at(8 * y + x)
             if piece:
                 boardMatrix[y, x, getIndex(piece)[0]] = getIndex(piece)[1]
-
-
-
 
 
 def createData(piece, size):
@@ -65,8 +62,8 @@ def createData(piece, size):
                 convertChessBoard(board, boardMatrix)
                 x = move.to_square % 8
                 y = int((move.to_square - x) / 8)
-                if boardMatrix[y, x, 5] == piece:
-                    boardMatrix[y, x, 5] = 0
+                if boardMatrix[y, x, piece] == -1:
+                    boardMatrix[y, x, piece] = 0
                     label = np.zeros(64)
                     label[move.to_square] = 1
                     games.append(boardMatrix)
@@ -75,5 +72,3 @@ def createData(piece, size):
     games = np.array(games)
     labels = np.array(labels)
     return games, labels
-
-

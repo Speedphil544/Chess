@@ -1,6 +1,5 @@
 import chess.pgn
 import numpy as np
-import Figures as fg
 import tensorflow as tf
 import random as rm
 
@@ -50,11 +49,10 @@ def convertChessBoard(board, boardMatrix):
                 boardMatrix[y, x, getIndex(piece)[0]] = getIndex(piece)[1]
 
 
-pgn = open("C:/Users/User/Downloads/KingBase2019-pgn/KingBase2019-A00-A39.pgn")
+pgn = open("C:/Users/Philipp/Downloads/KingBase2019-pgn/KingBase2019-A00-A39.pgn")
 
 modelPickField = tf.keras.models.load_model("Models/ModelPickField")
 modelPawn = tf.keras.models.load_model("Models/ModelMovePawn")
-int =0
 for _ in range(2000):
     game = chess.pgn.read_game(pgn)
     board = chess.Board()
@@ -62,7 +60,9 @@ for _ in range(2000):
         boardMatrix = np.zeros((8, 8, 6))
         convertChessBoard(board, boardMatrix)
         boardMatrix = np.array([boardMatrix])
-        a = modelPickField.predict(boardMatrix)[0, move.from_square]
+        a = modelPickField.predict(boardMatrix)#[0, move.from_square]
+        a = np.array(a)
+        a = np.argmax(a)
         board.push(move)
         boardMatrix = np.zeros((8, 8, 6))
         convertChessBoard(board, boardMatrix)
@@ -70,12 +70,10 @@ for _ in range(2000):
         x = move.to_square % 8
         y = int((move.to_square - x) / 8)
         if board.turn and boardMatrix[0, y, x, 5] == -1:
-            # a = np.array(a)
-            # a = np.argmax(a)
             boardMatrix[0, y, x, 5] = 0
-            b = modelPawn.predict(boardMatrix)[0, move.to_square]
-            # b = np.array(b)
-            # b = np.argmax(b)
+            b = modelPawn.predict(boardMatrix)#[0, move.to_square]
+            b = np.array(b)
+            b = np.argmax(b)
             print("Predict: ", a, b)
             print("Real: ", move.from_square, move.to_square)
 
